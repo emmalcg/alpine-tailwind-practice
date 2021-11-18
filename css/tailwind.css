@@ -1,0 +1,30 @@
+/*CSS ENTRY FILE */
+
+/*base is css reset*/
+@tailwind base;
+/*components eg container*/
+@tailwind components;
+
+/*responsible for vast majority of css output eg padding, grids etc */
+@tailwind utilities;
+
+/* want to be able to override utilties with btn class on a per case basis 
+
+so this way we could add extra padding to one button with an extra class on that btn and the btn class wouldn't override the utilties classes
+
+@apply - only use it for inslge html element - if need to distrat larger it causes too much code dulpication
+*/
+@layer components {
+  .btn {
+    @apply inline-block px-5 py-3 rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-opacity-50 uppercase tracking-wider font-semibold text-sm sm:text-base
+  }
+  .btn-primary {
+    @apply bg-brand hover:bg-brand-light sm:hover:bg-green-500 focus:ring-indigo-500 active:bg-brand-dark text-white
+  }
+  .btn-secondary {
+    @apply bg-gray-300  hover:bg-gray-200 sm:hover:bg-green-500 focus:ring-gray-300 active:bg-gray-400 text-gray-800
+  }
+
+}
+
+

@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <title>Alpine practice</title>
+</head>
+<body class="bg-gray-100">
+  <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
+  <h2 class="text-4x1 font-bold text-blue-500">tailwind!</h2>
+  <div class="px-8 py-12 max-w-md mx-auto sm:max-w-xl">
+    <img class="h-10" src="/img/logo.svg" alt="Workcation">
+    <img class="mt-6 rounded-lg shadow-xl sm:mt-8 sm:h-64 sm:w-full sm:object-cover object-center" src="img/beach-work.jpeg" alt="Women workcationing on the beach">
+    <h3 class="mt-6 text-2xl font-headline tracking-tight font-semi-bold text-gray-900 sm:mt-8 sm:text-4x1">You can work from anywhere. <span class="text-indigo-500">Take advantage of it.</span></h3>
+
+    <p class="mt-2 text-gray-600 sm:mt-4 sm:text-xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam eligendi delectus voluptatibus maxime nobis hic dolores quos, voluptate iusto. Natus nostrum quidem quo tenetur sit fuga rem quis soluta rerum? Vero molestiae numquam porro earum doloremque? Dicta nulla quo laboriosam, enim doloremque quas quia veritatis sit, similique earum consequuntur dolore.</p>
+    <div class="mt-4 space-x-1 sm:mt-6">
+      <a href="#" class="btn btn-primary shadow-lg hover:-translate-y-0.5 transform transition">book your escape</a>
+      <a href="#" class="btn btn-secondary">learn more</a>
+    </div>
+  </div>
+
+  <!--
+    declaring data: everything in alpine starts with x-data directive. inside of x-data, in plain javascript you declaire an object of data that alpine will track
+    
+    every property inside this object will be made available to other directives inside this html element. in addition, when one of these properties changes, everything that relies on it will change as well
+  
+  -->
+  <div x-data="{ count: 0 }">
+
+    <!--
+      listening for events
+      x-on is the direction to use for listening any event on an element. 
+      when a click event happens, alpine will call the associated javascript expression, count++ - we have direct access to the data declared in the x-data expression
+
+      can use @ instead of x-on
+    
+    -->
+    <button x-on:click="count++">
+      add
+    </button>
+    <!--
+      reacting to changes 
+    x-text - set the text content of an element to the result of a javascript expression 
+    -accepts plain javascript expression as an argument 
+    you could do x-text="count * 2" and the text content would always be 2 times value of count 
+    
+    -->
+    <span x-text="count"></span>
+  </div>
+
+
+  <div x-data="{ open: false }">
+    <button @click="open = ! open">
+      toggle 
+    </button>
+    <div x-show="open" @click.outside="open = false">
+      contents of drop down 
+    </div>
+  </div>
+
+  <!-- 
+
+    denoted by the get prefix for this property, filteredItems is a "getter" property in this object.
+    we can access filteredItems as if it was a normal property in our data object, but when we do, JS will evaluate the provided function under the hood and return the result
+
+    its acceptable to forgo the get and just make this a method that you can call from the template 
+
+    because we are working directly inside the x-data object, we must refrence any porerties using this.property instead of just property
+  -->
+  <div
+    x-data="{
+      search: '',
+      items: ['lotion', 'potion', 'ocean'],
+
+      get filteredItems() {
+        return this.items.filter(
+          i => i.startsWith(this.search)
+        )
+      }
+    }"
+  >
+  <!--x-model is used to "bind" the value of an input element with a data property: "search" from x-data="{ search: ''... }"
+  anytime the value of the input changes, the value of "search" will change to reflect that-->
+    <input x-model="search" placeholder="search...">
+      <ul>
+        <!---
+        x-for expressions take the following form: [item] in [items] where [items] is an array of data and [item] is the name of the variable that will be assigned to an iteration inside the loop
+
+        x-for must be declated on a <template> beccause it uses the ecisting behaviour of the <template> tag in the browser
+        
+          any el inside the template tag will be repeated for every item inside filteredItems and all expressions evaluated inside the loop will have direct acces to the iteration variable (item)
+        --->
+        <template x-for="item in filteredItems" :key="item">
+          <li x-text="item"></li>
+        </template>
+      </ul>
+  </div>
+</body>
+</html>
